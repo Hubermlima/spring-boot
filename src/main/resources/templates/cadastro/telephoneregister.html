@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Telephones register</title>
+
+<style>
+#tableGrid {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#tableGrid td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+#tableGrid tr:nth-child(even) {
+	background-color: #dddddd;
+}
+</style>
+
+
+</head>
+<body>
+
+	<h3>Telephones register</h3>
+	<table cellpadding="5">
+		<tr>
+			<td><label>Id:</label></td>
+			<td><input th:value="${personObj.id}" name="personId"
+				readonly="readonly" /></td>
+		</tr>
+		<tr>
+			<td><label>Name:</label></td>
+			<td><input th:value="${personObj.name}" name="personName"
+				readonly="readonly" /></td>
+		</tr>
+	</table>
+
+	<form th:action="@{/saveTelephone/{personId}(personId=${personObj.id})}" method="post" th:object="${telephoneObj}">
+
+		<table style="width: 70%; padding: auto;">
+			<tr>
+				<td><label>Id:</label></td>
+				<td><input type="text" name="id" th:field="*{id}"
+					readonly="readonly"></td>
+			</tr>
+
+			<tr>
+				<td><label>Type:</label></td>
+				<td><input type="text" name="type" th:field="*{type}"></td>
+			</tr>
+
+			<tr>
+				<td><label>Number:</label></td>
+				<td><input type="text" name="number" th:field="*{number}"></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><input type="submit" value="Save phone"></td>
+			</tr>
+
+		</table>
+
+	</form>
+
+
+	<table id="tableGrid">
+		<tr>
+			<th>Id</th>
+			<th>Type</th>
+			<th>Number</th>
+			<th>Action 1</th>
+			<th>Action 2</th>
+		</tr>
+		<tr th:each="telephone : ${telephones}">
+
+			<td th:text="${telephone.id}" />
+			<td th:text="${telephone.type}" />
+			<td th:text="${telephone.number}" />
+			<td><a
+				th:href="@{/edittelephone/{idtelephone}(idtelephone=${telephone.id})}">Edit</a></td>
+			<td><a
+				th:href="@{/removetelephone/{idtelephone}(idtelephone=${telephone.id})}">Trash</a></td>
+
+		</tr>
+
+	</table>
+
+
+</body>
+</html>

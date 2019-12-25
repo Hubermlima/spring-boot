@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Person register</title>
+
+<style>
+#tableGrid {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#tableGrid td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+#tableGrid tr:nth-child(even) {
+	background-color: #dddddd;
+}
+</style>
+
+
+</head>
+
+<body>
+	<h3>Cadastro Pessoa</h3>
+
+	<div th:each="m : ${msg}">
+		<span th:text="${m}"></span>
+	</div>
+
+	<form action="saveperson" method="post" th:object="${personObj}">
+
+
+		<table style="width: 70%; padding: auto;">
+			<tr>
+				<td><label>Id:</label></td>
+				<td><input type="text" name="id" th:field="*{id}"
+					readonly="readonly"></td>
+			</tr>
+
+			<tr>
+				<td><label>Name:</label></td>
+				<td><input type="text" name="name" th:field="*{name}"></td>
+			</tr>
+
+			<tr>
+				<td><label>Last name:</label></td>
+				<td><input type="text" name="lastname" th:field="*{lastname}"></td>
+			</tr>
+
+			<tr sec:authorize="hasAnyRole('ROLE_ADMIN')">
+				<td><label>Email:</label></td>
+				<td><input type="text" name="email" th:field="*{email}"></td>
+			</tr>
+
+			<tr>
+				<td><label>Gender:</label></td>
+				<td><select th:field="*{gender}">
+						<option value="MASCULINE" th:text="MASCULINO" />
+						<option value="FEMALE" th:text=FEMALE />
+				</select></td>
+			</tr>
+			
+			<tr>
+				<td><label>Occupation:</label></td>
+				<td><select th:field="*{occupation}" >
+						<option th:each="o : ${occupations}" th:value="${o.id}" th:text="${o.name}"/>
+				</select></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><input type="submit" value="Save person"></td>
+			</tr>
+
+		</table>
+
+	</form>
+
+
+
+	<br>
+	<form action="searchPersonByNameAndTelephone" id="searchPDFPersonByNameAndTelephone" method="post">
+
+		<table style="width: 70%; padding: auto;">
+			<tr>
+				<td><label>Search by name:</label></td>
+				<td><input type="text" name="searchName"></td>
+			</tr>
+
+			<tr>
+				<td><label>Search by gender:</label></td>
+				<td><select name="gender" >
+				        <option value="EVERYBODY" />
+						<option value="MASCULINE" th:text="MASCULINO" />
+						<option value="FEMALE" th:text=FEMALE />
+				</select></td>
+			<tr>
+			    <td></td>
+				<td><input type="submit" name="search" id="search" value="Search">
+
+			
+		     		<input type="submit" name="pdf" id="pdf" value="Download PDF" onclick="document.getElementById('searchPDFPersonByNameAndTelephone').method = 'get'">
+				</td>
+			</tr>
+			
+		</table>
+
+	</form>
+	<br>
+	<br>
+
+
+
+
+	<table id="tableGrid">
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Last name</th>
+			<th>Email</th>
+			<th>Action 1</th>
+			<th>Action 2</th>
+		</tr>
+		<tr th:each="person : ${persons}">
+
+			<td th:text="${person.id}" />
+			<td><a
+				th:href="@{/telephonesPerson/{idperson}(idperson=${person.id})}"><span
+					th:text="${person.name}"></span></a></td>
+			<td th:text="${person.lastname}" />
+			<td th:text="${person.email}" />
+			<td><a
+				th:href="@{/editperson/{idperson}(idperson=${person.id})}">Edit</a></td>
+			<td><a
+				th:href="@{/removeperson/{idperson}(idperson=${person.id})}">Trash</a></td>
+
+		</tr>
+
+	</table>
+</body>
+</html>
